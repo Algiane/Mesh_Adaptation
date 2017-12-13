@@ -30,7 +30,16 @@ git clone https://github.com/MmgTools/ */
 // if the header file is in "include/mmg/mmg2d"
 #include "mmg/mmg2d/libmmg2d.h"
 
-
+/**
+ * \param x x coordinate of the mesh node
+ * \param y y coordinate of the mesh node
+ *
+ * \return the value of the analytic function at the node of coor \a x
+ * and \a y of the mesh
+ *
+ * Compute the nodal value of an analytic function
+ *
+ */
 double f(double x, double y) {
   double sol;
 
@@ -39,6 +48,52 @@ double f(double x, double y) {
   return sol;
 }
 
+/**
+ * \param x x coordinate of the mesh node
+ * \param y y coordinate of the mesh node
+ * \param hess the computed hessian value at coor \a x and \a y
+ *
+ * \return 1 if success, 0 if fail.
+ *
+ * Compute the nodal value of the hessian of the analytic function.
+ *
+ * \remark: the Hessian is symetric definite positive so we store only h_11,h_12,h22
+ *
+ */
+int hessian(double x, double y, double hess[3] ) {
+
+  // HESSIAN COMPUTATION
+
+  return 1;
+}
+
+/**
+ * \param hess the hessian
+ * \param lambda the computed hessian eigenvalues
+ *
+ * \return 1 if success, 0 if fail.
+ *
+ * Compute the eigen values of the hessian \a hess.
+ *
+ */
+int eigenvals(double hess[3], double lambda[2]) {
+  double lambda[2];
+
+  // EIGENVALUES COMPUTATION
+
+  return
+}
+
+/**
+ * \param x x coordinate of the mesh node
+ * \param y y coordinate of the mesh node
+ *
+ * \return the wanted edge length at node
+ *
+ * Compute the scalar edge length that we want to apply to the node of
+ * coor \a x \a y
+ *
+ */
 double scalar_size(double x, double y) {
   double siz;
 
@@ -47,8 +102,19 @@ double scalar_size(double x, double y) {
   return siz;
 }
 
-int tensor_size(double x, double y) {
-  double siz[6];
+/**
+ * \param x x coordinate of the mesh node
+ * \param y y coordinate of the mesh node
+ * \param siz computed metric
+ *
+ * \return 1 if success, 0 if fail.
+ *
+ * Compute the metric tensor to prescribe to the node of
+ * coor \a x \a y
+ *
+ */
+int tensor_size(double x, double y, double siz[3]) {
+  double siz[3];
 
   // TO FILL WITH THE WANTED TENSORIAL SIZE.
 
