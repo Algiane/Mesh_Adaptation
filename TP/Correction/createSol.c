@@ -42,6 +42,12 @@ double f(double x, double y) {
 
   // TO FILL WITH THE WANTED ANALYTIC FUNCTION
 
+  /* Gaussian function */
+  // sol = 10. * exp(-x*x/30. -y*y/30.);
+
+  /* Sinus function */
+  sol = sin(x/2+y/2);
+
   return sol;
 }
 
@@ -55,11 +61,27 @@ double f(double x, double y) {
  * \remark: the Hessian is symetric definite positive so we store only h_11,h_12,h22
  *
  */
-int hessian(double x, double y, double hess[3] ) {
+void hessian(double x, double y, double hess[3] ) {
 
   // HESSIAN COMPUTATION
 
-  return 1;
+  /* For the gaussian function */
+  // dx f =  10.* -2.*x/30.*exp(-x*x/30. -y*y/30.);
+  // dy f =  10.* -2.*y/30.*exp(-x*x/30. -y*y/30.);
+  /* hess[0] = 10.*(-2./30.)*exp(-x*x/30. -y*y/30.) */
+  /*   + 10.*(-2.*x/30.)*(-2.*x/30.)*exp(-x*x/30. -y*y/30.); */
+  /* hess[1] = 10.* (-2.*x/30.)* (-2.*y/30.)*exp(-x*x/30. -y*y/30.); */
+  /* hess[2] = 10.*(-2./30.)*exp(-x*x/30. -y*y/30.) */
+  /*   + 10.*(-2.*y/30.)*-(2.*y/30.)*exp(-x*x/30. -y*y/30.); */
+
+  /* For the sinus function */
+  // dx f = cos(x/2.+y/2.)/2.
+  // dy f = cos(x/2.+y/2.)/2.
+  hess[0] = -sin(x/2.+y/2.)/4.;
+  hess[1] = -sin(x/2.+y/2.)/4.;
+  hess[2] = -sin(x/2.+y/2.)/4.;
+
+  return;
 }
 
 /**
@@ -125,9 +147,29 @@ void eigenvals(double hess[3], double lambda[2],double vp[2][2]) {
  *
  */
 double scalar_size(double x, double y, double epsilon) {
-  double siz;
+  double       lambda[2],vp[2][2],isqhmax,hess[3],siz;
+  const double hmax = 10.;   // maximal edge size
+  int          k;
 
-  // TO FILL WITH THE WANTED SCALAR SIZE.
+  /* Hessian computation */
+  hessian(x,y,hess);
+  for ( k=0; k<3; ++k )
+    hess[k] *= 2./(9.*epsilon);
+
+  /* Eigenvalues/vectors */
+  eigenvals(hess,lambda,vp);
+
+  lambda[0] = fabs(lambda[0]);
+  lambda[1] = fabs(lambda[1]);
+
+  /* Size truncature */
+  isqhmax = 1./(hmax*hmax);
+  if ( isqhmax > lambda[0] ) lambda[0] = isqhmax;
+  if ( isqhmax > lambda[1] ) lambda[1] = isqhmax;
+
+  /* Metric computation */
+  if ( lambda[0] >= lambda[1] ) siz = 1./sqrt(lambda[0]);
+  else if ( lambda[1] > lambda[0] ) siz = 1./sqrt(lambda[1]);
 
   return siz;
 }
@@ -143,8 +185,30 @@ double scalar_size(double x, double y, double epsilon) {
  *
  */
 void tensor_size(double x, double y, double epsilon, double siz[3]) {
+  double       lambda[2],vp[2][2],isqhmax;
+  const double hmax = 10.;   // maximal edge size
+  int          k;
 
-  // TO FILL WITH THE WANTED TENSORIAL SIZE.
+  /* Hessian computation */
+  hessian(x,y,siz);
+  for ( k=0; k<3; ++k )
+    siz[k] *= 2./(9.*epsilon);
+
+  /* Eigenvalues/vectors */
+  eigenvals(siz,lambda,vp);
+
+  lambda[0] = fabs(lambda[0]);
+  lambda[1] = fabs(lambda[1]);
+
+  /* Size truncature */
+  isqhmax = 1./(hmax*hmax);
+  if ( isqhmax > lambda[0] ) lambda[0] = isqhmax;
+  if ( isqhmax > lambda[1] ) lambda[1] = isqhmax;
+
+  /* Compute M = R D Rt */
+  siz[0] = lambda[0]*vp[0][0]*vp[0][0] + lambda[1]*vp[1][0]*vp[1][0];
+  siz[1] = lambda[0]*vp[0][0]*vp[0][1] + lambda[1]*vp[1][0]*vp[1][1];
+  siz[2] = lambda[0]*vp[0][1]*vp[0][1] + lambda[1]*vp[1][1]*vp[1][1];
 
   return;
 }
