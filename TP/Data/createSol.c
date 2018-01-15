@@ -169,7 +169,7 @@ int main(int argc,char *argv[]) {
            " mesh nodes at gmsh format for vizualization \n");
     printf("        vizuMetric.msh file  : the nodal values of your metric at"
            " mesh nodes at Gmsh format for vizalization. \n");
-    printf("        metric.mesh file  : the nodal values of your metric at"
+    printf("        metric.sol file  : the nodal values of your metric at"
            " mesh nodes to use for adaptation. \n");
 
     return(1);
@@ -318,7 +318,7 @@ int main(int argc,char *argv[]) {
   }
 
   /* Save solution for mesh adaptation */
-  if ( MMG2D_saveSol(mmgMesh,mmgSol,"metric.mesh") != 1 ) {
+  if ( MMG2D_saveSol(mmgMesh,mmgSol,"metric.sol") != 1 ) {
     printf("Unable to save the metric for adaptation.\n");
     exit(EXIT_FAILURE);
   }
